@@ -1,0 +1,10 @@
+dataset_config:
+  hateful_memes:
+    use_image_captions: true
+    image_captions:
+      train:
+      - hateful_memes/defaults/image_captions/image_captioning_train.csv
+      val:
+      - hateful_memes/defaults/image_captions/image_captioning_dev.csv
+      test:
+      - hateful_memes/defaults/image_captions/image_captioning_test.csv

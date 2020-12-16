@@ -31,12 +31,22 @@ class MMFDataset(BaseDataset):
         self._use_features = self.config.get("use_features", False)
         if self._use_features:
             self.features_db = self.build_features_db()
+        
+        self._use_image_captions = self.config.get("use_image_captions", False)
+        if self._use_image_captions:
+            self.image_captions_db = self.build_image_captions_db()    
 
     def build_annotation_db(self):
         annotation_path = self._get_path_based_on_index(
             self.config, "annotations", self._index
         )
         return AnnotationDatabase(self.config, annotation_path)
+    
+    def build_image_captions_db(self):
+        image_captions_path = self._get_path_based_on_index(
+            self.config, "image_captions", self._index
+        )
+        return AnnotationDatabase(self.config, image_captions_path)
 
     def build_features_db(self):
         features_path = self._get_path_based_on_index(

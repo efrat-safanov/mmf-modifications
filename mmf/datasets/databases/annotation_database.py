@@ -3,6 +3,7 @@ import json
 
 import numpy as np
 import torch
+import csv
 from mmf.utils.file_io import PathManager
 from mmf.utils.general import get_absolute_path
 
@@ -31,6 +32,8 @@ class AnnotationDatabase(torch.utils.data.Dataset):
             self._load_jsonl(path)
         elif path.endswith(".json"):
             self._load_json(path)
+        elif path.endswith(".csv"):
+            self._load_csv(path)     
         else:
             raise ValueError("Unknown file format for annotation db")
 
@@ -39,6 +42,15 @@ class AnnotationDatabase(torch.utils.data.Dataset):
             db = f.readlines()
             for idx, line in enumerate(db):
                 db[idx] = json.loads(line.strip("\n"))
+            self.data = db
+            self.start_idx = 0
+            
+    def _load_csv(self, path):
+        with PathManager.open(path, "r") as f:
+            reader = csv.DictReader(f, delimiter=',', quotechar='"')
+            db = {}
+            for row in reader:
+               db[int(row["id"])] = row 
             self.data = db
             self.start_idx = 0
 
