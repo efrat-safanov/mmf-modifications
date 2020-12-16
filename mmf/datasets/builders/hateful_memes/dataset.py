@@ -31,6 +31,7 @@ class HatefulMemesFeaturesDataset(MMFDataset):
     def __getitem__(self, idx):
         sample_info = self.annotation_db[idx]
         sample_info = self.preprocess_sample_info(sample_info)
+        
 
         current_sample = Sample()
 
@@ -40,7 +41,14 @@ class HatefulMemesFeaturesDataset(MMFDataset):
             current_sample.update(processed_text)
 
         current_sample.id = torch.tensor(int(sample_info["id"]), dtype=torch.int)
-
+        
+        if hasattr(self, 'image_captions_db') and self.image_captions_db[idx]:
+            if "image_text" in self.image_captions_db[idx]: 
+                processed_caption_text = self.text_processor({"text": self.image_captions_db[idx]["image_text"]})
+                current_sample.image_text = processed_caption_text["text"]
+                if "input_ids" in processed_caption_text:
+                    current_sample["image_text_input_ids"] = processed_caption_text["input_ids"]
+            
         # Instead of using idx directly here, use sample_info to fetch
         # the features as feature_path has been dynamically added
         features = self.features_db.get(sample_info)
@@ -83,6 +91,14 @@ class HatefulMemesImageDataset(MMFDataset):
             current_sample.update(processed_text)
 
         current_sample.id = torch.tensor(int(sample_info["id"]), dtype=torch.int)
+                
+        if hasattr(self, 'image_captions_db') and self.image_captions_db[sample_info["id"]]:
+            if "image_text" in self.image_captions_db[sample_info["id"]]: 
+                processed_caption_text = self.text_processor({"text": self.image_captions_db[sample_info["id"]]["image_text"]})
+                current_sample.image_text = processed_caption_text["text"]
+                if "input_ids" in processed_caption_text:
+                    current_sample["image_text_input_ids"] = processed_caption_text["input_ids"] 
+
 
         # Get the first image from the set of images returned from the image_db
         current_sample.image = self.image_db[idx]["images"][0]
