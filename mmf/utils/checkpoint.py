@@ -130,6 +130,8 @@ class Checkpoint:
 
     def load_state_dict(self):
         ckpt_config = self.config.checkpoint
+        print("!!!!!!!!!!!!!!!")
+        print(ckpt_config)
 
         suffix = "best.ckpt" if ckpt_config.resume_best else "current.ckpt"
         reverse_suffix = "best.ckpt" if not ckpt_config.resume_best else "current.ckpt"

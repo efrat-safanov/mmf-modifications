@@ -213,6 +213,7 @@ class BaseModel(nn.Module):
         assert (
             model_cls == cls
         ), f"Incorrect pretrained model key {model_name} for class {cls.__name__}"
+        print("trying to load pretrained", model_name)
         output = load_pretrained_model(model_name, *args, **kwargs)
         config, checkpoint = output["config"], output["checkpoint"]
 
