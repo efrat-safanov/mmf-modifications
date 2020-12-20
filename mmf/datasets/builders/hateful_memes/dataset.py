@@ -1,4 +1,4 @@
-# Copyright (c) Facebook, Inc. and its affiliates.
+	# Copyright (c) Facebook, Inc. and its affiliates.
 import copy
 import os
 
@@ -35,19 +35,15 @@ class HatefulMemesFeaturesDataset(MMFDataset):
 
         current_sample = Sample()
 
-        processed_text = self.text_processor({"text": sample_info["text"]})
+        texts = [ sample_info["text"], self.image_captions_db[idx]["image_text"]]    
+        processed_text = self.text_processor({"text": texts})
+        print(processed_text)
         current_sample.text = processed_text["text"]
         if "input_ids" in processed_text:
             current_sample.update(processed_text)
 
         current_sample.id = torch.tensor(int(sample_info["id"]), dtype=torch.int)
         
-        if hasattr(self, 'image_captions_db') and self.image_captions_db[idx]:
-            if "image_text" in self.image_captions_db[idx]: 
-                processed_caption_text = self.text_processor({"text": self.image_captions_db[idx]["image_text"]})
-                current_sample.image_text = processed_caption_text["text"]
-                if "input_ids" in processed_caption_text:
-                    current_sample["image_text_input_ids"] = processed_caption_text["input_ids"]
             
         # Instead of using idx directly here, use sample_info to fetch
         # the features as feature_path has been dynamically added
@@ -85,24 +81,35 @@ class HatefulMemesImageDataset(MMFDataset):
         sample_info = self.annotation_db[idx]
         current_sample = Sample()
 
-        processed_text = self.text_processor({"text": sample_info["text"]})
+        #processed_text = self.text_processor({"text": sample_info["text"]})
+        #current_sample.text = processed_text["text"]
+        #if "input_ids" in processed_text:
+        #    current_sample.update(processed_text)
+
+        merged_text =  sample_info["text"] + " [SEP]" + self.image_captions_db[sample_info["id"]]["image_text"]    
+        #print(merged_text)
+        processed_text = self.text_processor({"text": merged_text})
+        #print(processed_text)
         current_sample.text = processed_text["text"]
         if "input_ids" in processed_text:
             current_sample.update(processed_text)
+            #print(current_sample["input_ids"].size())   
 
         current_sample.id = torch.tensor(int(sample_info["id"]), dtype=torch.int)
-                
-        if hasattr(self, 'image_captions_db') and self.image_captions_db[sample_info["id"]]:
-            if "image_text" in self.image_captions_db[sample_info["id"]]: 
-                processed_caption_text = self.text_processor({"text": self.image_captions_db[sample_info["id"]]["image_text"]})
-                current_sample.image_text = processed_caption_text["text"]
-                if "input_ids" in processed_caption_text:
-                    current_sample["image_text_input_ids"] = processed_caption_text["input_ids"] 
-
+        #print(sample_info["id"])        
+        #if hasattr(self, 'image_captions_db') and self.image_captions_db[sample_info["id"]]:
+            #print(self.image_captions_db[sample_info["id"]])	
+            #if "image_text" in self.image_captions_db[sample_info["id"]]: 
+                #processed_caption_text = self.text_processor({"text": self.image_captions_db[sample_info["id"]]["image_text"]})
+                #print(processed_caption_text)
+                #current_sample.image_text = processed_caption_text["text"]
+                #if "input_ids" in processed_caption_text:
+                #    current_sample["image_text_input_ids"] = processed_caption_text["input_ids"] 
+        #print(processed_text)
 
         # Get the first image from the set of images returned from the image_db
         current_sample.image = self.image_db[idx]["images"][0]
-
+        #print(current_sample)    
         if "label" in sample_info:
             current_sample.targets = torch.tensor(
                 sample_info["label"], dtype=torch.long

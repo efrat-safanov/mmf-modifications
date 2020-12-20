@@ -1,6 +1,7 @@
 includes:
 - ./text.yaml
 - configs/datasets/hateful_memes/bert.yaml
+- configs/datasets/hateful_memes/image_captions.yaml
 - configs/models/unimodal/bert.yaml
 
 model_config:
