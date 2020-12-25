@@ -35,9 +35,10 @@ class HatefulMemesFeaturesDataset(MMFDataset):
 
         current_sample = Sample()
 
-        texts = [ sample_info["text"], self.image_captions_db[idx]["image_text"]]    
-        processed_text = self.text_processor({"text": texts})
-        print(processed_text)
+        #texts = [ sample_info["text"], self.image_captions_db[idx]["image_text"]]    
+        merged_text =  sample_info["text"] + " [SEP]" + self.image_captions_db[sample_info["id"]]["image_text"]    
+        processed_text = self.text_processor({"text": merged_text})
+        #print(processed_text)
         current_sample.text = processed_text["text"]
         if "input_ids" in processed_text:
             current_sample.update(processed_text)
