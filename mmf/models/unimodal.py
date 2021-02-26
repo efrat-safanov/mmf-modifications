@@ -64,14 +64,8 @@ class UnimodalText(BaseModel):
         else:
             text = sample_list.text
 
-        #if "image_text_input_ids" in sample_list:
-        #    text2 = sample_list.input_ids
-        #    args2 = []
-
         
         embedding = self.base(text, *args)
-        #embedding2 = self.base(text2, *args2)
-        #concat_embedding = torch.cat([embedding, embedding2], dim=-1)
         output = {}
         output["scores"] = self.classifier(embedding)
 
