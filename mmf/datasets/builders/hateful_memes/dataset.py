@@ -36,7 +36,7 @@ class HatefulMemesFeaturesDataset(MMFDataset):
         current_sample = Sample()
         
         if self._use_image_captions:
-            merged_text =  sample_info["text"] + " [SEP] " + self.image_captions_db[sample_info["id"]]["image_text"]    
+            merged_text =  sample_info["text"] + " [SEP]" + self.image_captions_db[sample_info["id"]]["image_text"]    
             processed_text = self.text_processor({"text": merged_text})
         else:
             processed_text = self.text_processor({"text": sample_info["text"]})
@@ -85,7 +85,7 @@ class HatefulMemesImageDataset(MMFDataset):
         current_sample = Sample()
 
         if self._use_image_captions:
-            merged_text =  sample_info["text"] + " [SEP] " + self.image_captions_db[sample_info["id"]]["image_text"]    
+            merged_text =  sample_info["text"] + " [SEP]" + self.image_captions_db[sample_info["id"]]["image_text"]    
             processed_text = self.text_processor({"text": merged_text})
         else:
             processed_text = self.text_processor({"text": sample_info["text"]})
