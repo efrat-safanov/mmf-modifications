@@ -1,0 +1,11 @@
+dataset_config:
+  hateful_memes:
+    use_image_captions: true
+    processors:
+      text_processor:
+        type: multi_sentence_bert_tokenizer
+    image_captions:
+      train:
+      - memotion/image_captions/image_captioning_train.csv
+      test:
+      - memotion/image_captions/image_captioning_test.csv
