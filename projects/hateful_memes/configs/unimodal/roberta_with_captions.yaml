@@ -1,0 +1,16 @@
+    includes:
+    - ./text.yaml
+    - configs/datasets/hateful_memes/roberta.yaml
+    - configs/datasets/hateful_memes/image_captions.yaml
+    - configs/models/unimodal/roberta.yaml
+    
+    model_config:
+      unimodal_text:
+        classifier:
+          type: mlp
+          params:
+            in_dim: 768
+            num_layers: 2
+    
+    training:
+      batch_size: 128

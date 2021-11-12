@@ -64,6 +64,7 @@ class UnimodalText(BaseModel):
         else:
             text = sample_list.text
 
+        
         embedding = self.base(text, *args)
         output = {}
         output["scores"] = self.classifier(embedding)
