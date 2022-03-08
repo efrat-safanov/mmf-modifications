@@ -94,7 +94,8 @@ class AnnotationDatabase(torch.utils.data.Dataset):
         return len(self.data) - self.start_idx
 
     def __getitem__(self, idx):
-        data = self.data[idx + self.start_idx]
+        #print(self.data)
+        data = self.data[(idx + self.start_idx).item()]
 
         # Hacks for older IMDBs
         if "answers" not in data:

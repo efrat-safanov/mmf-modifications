@@ -40,6 +40,7 @@ class MMFDataset(BaseDataset):
         annotation_path = self._get_path_based_on_index(
             self.config, "annotations", self._index
         )
+        print(annotation_path)
         return AnnotationDatabase(self.config, annotation_path)
     
     def build_image_captions_db(self):

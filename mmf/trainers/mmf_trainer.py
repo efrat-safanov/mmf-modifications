@@ -46,7 +46,7 @@ class MMFTrainer(
         self.on_init_start()
 
         # Parallize model
-        self.parallelize_model()
+        #self.parallelize_model()
 
         # Callbacks
         self.on_init_end()

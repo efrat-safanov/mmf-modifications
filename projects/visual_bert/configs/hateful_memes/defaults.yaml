@@ -1,6 +1,6 @@
 includes:
 - configs/datasets/hateful_memes/with_features.yaml
-- configs/datasets/hateful_memes/image_captions.yaml
+  #- configs/datasets/hateful_memes/image_captions.yaml
 
 model_config:
   visual_bert:

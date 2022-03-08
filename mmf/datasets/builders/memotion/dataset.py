@@ -15,7 +15,7 @@ from torchvision import transforms
 
 
 class OffensiveImageDataset(MMFDataset):
-    offensive_map: Dict[str, int] = {"not_offensive": 0, "slight": 1, "offensive": 1, "very_offensive": 1}
+    offensive_map: Dict[str, int] = {"not_offensive": 0, "slight": 1, "offensive": 1, "very_offensive": 1, "hateful_offensive" : 1}
 
     def __init__(self, config, *args, dataset_name="offensive", **kwargs):
         super().__init__(dataset_name, config, *args, **kwargs)
@@ -47,7 +47,7 @@ class OffensiveImageDataset(MMFDataset):
         # Get the first image from the set of images returned from the image_db
         current_sample.image = self.image_db[idx]["images"][0]
         if "offensive" in sample_info:
-            label = sample_info["label"]
+            label = None
             if type(sample_info["offensive"]) == str:
                 label = OffensiveImageDataset.offensive_map[sample_info["offensive"]]
             if label != 0 and label != 1:

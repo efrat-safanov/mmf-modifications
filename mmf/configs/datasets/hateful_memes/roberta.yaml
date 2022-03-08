@@ -7,6 +7,6 @@ dataset_config:
           tokenizer_config:
             type: roberta-base
             params:
-              #do_lower_case: true
+              do_lower_case: false
           mask_probability: 0
-          max_seq_length: 512
+          max_seq_length: 128

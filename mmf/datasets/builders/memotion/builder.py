@@ -44,7 +44,6 @@ class MemotionBuilder(MMFDatasetBuilder):
                 data_dir,
                 "datasets",
                 self.dataset_name,
-                "defaults",
                 "annotations",
                 "train",
                 "labels.csv"
@@ -53,7 +52,7 @@ class MemotionBuilder(MMFDatasetBuilder):
         # NOTE: This doesn't check for files, but that is a fine assumption for now
         assert PathManager.exists(test_path), (
             "memotion Dataset doesn't do automatic downloads; please "
-            + "follow instructions for manual download"
+            + "follow instructions for manual download for path: " + test_path 
         )
         super().build(config, *args, **kwargs)
 

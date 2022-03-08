@@ -16,6 +16,7 @@ from torchvision import transforms
 class HatefulMemesFeaturesDataset(MMFDataset):
     def __init__(self, config, *args, dataset_name="hateful_memes", **kwargs):       
         super().__init__(dataset_name, config, *args, **kwargs)
+        print(self._use_image_captions)
         assert (
             self._use_features
         ), "config's 'use_images' must be true to use image dataset"
@@ -34,10 +35,11 @@ class HatefulMemesFeaturesDataset(MMFDataset):
         
 
         current_sample = Sample()
-        
+        #print(self._use_image_captions)
         if self._use_image_captions:
-            merged_text =  sample_info["text"] + " [SEP]" + self.image_captions_db[sample_info["id"]]["image_text"]    
+            merged_text =  sample_info["text"] + " [SEP] " + self.image_captions_db[sample_info["id"]]["image_text"]    
             processed_text = self.text_processor({"text": merged_text})
+            #print(processed_text)
         else:
             processed_text = self.text_processor({"text": sample_info["text"]})
 
