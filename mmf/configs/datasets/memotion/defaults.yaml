@@ -52,7 +52,7 @@ dataset_config:
               params:
                 mean: [0.46777044, 0.44531429, 0.40661017]
                 std: [0.12221994, 0.12145835, 0.14380469]
-    return_features_info: false #changed
+    return_features_info: true #changed
 
 
 evaluation:

@@ -68,14 +68,16 @@ def get_image_id(image_name):
     return image_id
 
 
-def extract_dataset_pool5(image_dir, save_dir, total_group, group_id, ext_filter):
+def extract_dataset_pool5(image_dir, save_dir, total_group, group_id, ext_filter, name_to_id_map_file):
     image_list = glob(image_dir + "/*." + ext_filter)
     image_list = {f: 1 for f in image_list}
     exclude = {}
-    with open("./list") as f:
+    name_to_id_map = {}
+    with open(name_to_id_map_file) as f:
         lines = f.readlines()
         for line in lines:
-            exclude[line.strip("\n").split(os.path.sep)[-1].split(".")[0]] = 1
+            line_arr = line.strip("\n").split(",")
+            name_to_id_map[line_arr[1]] = line_arr[0].strip("\s")
     output_files = glob(os.path.join(save_dir, "*.npy"))
     output_dict = {}
     for f in output_files:
@@ -90,14 +92,18 @@ def extract_dataset_pool5(image_dir, save_dir, total_group, group_id, ext_filter
     image_list = list(image_list.keys())
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
-
+    print(image_list)
     for n_im, impath in enumerate(image_list):
         if (n_im + 1) % 100 == 0:
             print("processing %d / %d" % (n_im + 1, len(image_list)))
         image_name = os.path.basename(impath)
-        image_id = get_image_id(image_name)
-        if image_id % total_group != group_id:
+        try:
+            image_id = name_to_id_map[image_name] #get_image_id(image_name)
+        except Exception:
+            print("id error for: " + image_name)
             continue
+        #if image_id % total_group != group_id:
+        #    continue
 
         feat_name = image_name.replace(ext_filter, "npy")
         save_path = os.path.join(save_dir, feat_name)
@@ -127,9 +133,10 @@ if __name__ == "__main__":
     parser.add_argument("--data_dir", type=str, required=True)
     parser.add_argument("--out_dir", type=str, required=True)
     parser.add_argument("--image_ext", type=str, default="jpg")
+    parser.add_argument("--name_to_id_map", type=str, required=True, default="name_to_id_map.csv")
 
     args = parser.parse_args()
 
     extract_dataset_pool5(
-        args.data_dir, args.out_dir, args.total_group, args.group_id, args.image_ext
+        args.data_dir, args.out_dir, args.total_group, args.group_id, args.image_ext,args.name_to_id_map
     )
