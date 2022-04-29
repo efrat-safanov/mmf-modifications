@@ -4,7 +4,7 @@ dataset_config:
     depth_first: false
     fast_read: false
     use_images: true
-    use_features: false #changed
+    use_features: true #changed
     split_train:
       val: 0.2
       seed: 42
@@ -14,6 +14,11 @@ dataset_config:
       - memotion/annotations/train/img/
       test:
       - memotion/annotations/test/img/
+    features:
+      train:
+        - memotion/annotations/train/features/resnet.lmdb
+         test:
+        - memotion/annotations/test/features/resnet.lmdb
     annotations:
       train:
       - memotion/annotations/train/labels.csv
@@ -52,8 +57,11 @@ dataset_config:
               params:
                 mean: [0.46777044, 0.44531429, 0.40661017]
                 std: [0.12221994, 0.12145835, 0.14380469]
-    return_features_info: false #changed
+    return_features_info: true #changed
 
 
 evaluation:
   predict_file_format: csv
+
+training:
+  tensorboard: true

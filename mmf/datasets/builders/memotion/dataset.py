@@ -28,6 +28,13 @@ class OffensiveImageDataset(MMFDataset):
         # Assign transforms to the image_db
         self.image_db.transform = self.image_processor
 
+
+    def preprocess_sample_info(self, sample_info):
+        id = sample_info["id"]
+        # Add feature_path key for feature_database access
+        sample_info["feature_path"] = f"{id}.npy"
+        return sample_info
+
     def __getitem__(self, idx):
         sample_info = self.annotation_db[idx]
         current_sample = Sample()
@@ -45,7 +52,16 @@ class OffensiveImageDataset(MMFDataset):
         current_sample.id = torch.tensor(int(sample_info["id"]), dtype=torch.int)
 
         # Get the first image from the set of images returned from the image_db
+        #do we need it??
         current_sample.image = self.image_db[idx]["images"][0]
+
+        features = self.features_db.get(sample_info)
+        if hasattr(self, "transformer_bbox_processor"):
+            features["image_info_0"] = self.transformer_bbox_processor(
+                features["image_info_0"]
+            )
+        current_sample.update(features)
+
         if "offensive" in sample_info:
             label = None
             if type(sample_info["offensive"]) == str:
