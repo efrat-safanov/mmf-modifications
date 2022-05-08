@@ -30,7 +30,7 @@ class OffensiveImageDataset(MMFDataset):
 
 
     def preprocess_sample_info(self, sample_info):
-        image_path = sample_info["img"]
+        image_path = sample_info["image_name"]
         # img/image_02345.png -> image_02345
         feature_path = image_path.split("/")[-1].split(".")[0]
         # Add feature_path key for feature_database access
@@ -56,7 +56,7 @@ class OffensiveImageDataset(MMFDataset):
 
         # Get the first image from the set of images returned from the image_db
         #do we need it??
-        current_sample.image = self.image_db[idx]["images"][0]
+        #current_sample.image = self.image_db[idx]["images"][0]
 
         features = self.features_db.get(sample_info)
         if hasattr(self, "transformer_bbox_processor"):
