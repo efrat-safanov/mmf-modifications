@@ -506,7 +506,6 @@ class VisualBERT(BaseModel):
             else:
                 image_feat_variable = sample_list["image_feature_0"]
                 image_dim_variable = None
-        print(sample_list) 
         if image_dim_variable is None:
             image_dim_variable = sample_list["image_feature_0"].new_full(
                 size=(image_feat_variable.size(0), 1),
