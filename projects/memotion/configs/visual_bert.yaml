@@ -40,8 +40,6 @@ evaluation:
   - accuracy
   - binary_f1
   - roc_auc
-  - precision
-  - recall
   - macro_f1
   - micro_f1
 
