@@ -1,6 +1,6 @@
 includes:
 - configs/datasets/memotion/defaults.yaml
-- configs/models/visual_bert/defaults.yaml
+- configs/models/vilbert/defaults.yaml
 
 model_config:
   visual_bert:
@@ -58,4 +58,4 @@ checkpoint:
   pretrained_state_mapping:
     model.bert: model.bert
   resume_pretrained: true
-  resume_zoo: visual_bert.pretrained.coco
+  resume_zoo: vilbert.pretrained.cc.original
