@@ -24,7 +24,9 @@ evaluation:
   - accuracy
   - binary_f1
   - roc_auc
-
+  - macro_f1
+  - micro_f1
+  
 training:
   batch_size: 32
   lr_scheduler: true
