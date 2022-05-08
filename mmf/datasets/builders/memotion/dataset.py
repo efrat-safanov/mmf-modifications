@@ -30,9 +30,11 @@ class OffensiveImageDataset(MMFDataset):
 
 
     def preprocess_sample_info(self, sample_info):
-        id = sample_info["id"]
+        image_path = sample_info["img"]
+        # img/image_02345.png -> image_02345
+        feature_path = image_path.split("/")[-1].split(".")[0]
         # Add feature_path key for feature_database access
-        sample_info["feature_path"] = f"{id}.npy"
+        sample_info["feature_path"] = f"{feature_path}.npy"
         return sample_info
 
     def __getitem__(self, idx):
