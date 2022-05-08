@@ -39,6 +39,7 @@ class OffensiveImageDataset(MMFDataset):
 
     def __getitem__(self, idx):
         sample_info = self.annotation_db[idx]
+        sample_info = self.preprocess_sample_info(sample_info)
         current_sample = Sample()
 
         if self._use_image_captions:
