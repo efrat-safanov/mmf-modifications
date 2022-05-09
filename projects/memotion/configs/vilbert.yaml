@@ -49,7 +49,7 @@ training:
   max_updates: 22000
   find_unused_parameters: true
   early_stop:
-    criteria: offensive/macro_f1
+    criteria: offensive/micro_f1
     minimize: false
 
 checkpoint:
