@@ -1,5 +1,5 @@
 dataset_config:
-  hateful_memes:
+  memotion:
     use_image_captions: true
     processors:
       text_processor:
