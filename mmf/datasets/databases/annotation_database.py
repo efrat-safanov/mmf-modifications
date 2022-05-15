@@ -95,8 +95,11 @@ class AnnotationDatabase(torch.utils.data.Dataset):
 
     def __getitem__(self, idx):
         #print(self.data)
-        data = self.data[(idx + self.start_idx).item()]
-
+        if isinstance(idx + self.start_idx, int):
+            data = self.data[(idx + self.start_idx)]
+        else:
+            data = self.data[(idx + self.start_idx).item()]
+        #data = self.data[(idx + self.start_idx)]
         # Hacks for older IMDBs
         if "answers" not in data:
             if "all_answers" in data and "valid_answers" not in data:

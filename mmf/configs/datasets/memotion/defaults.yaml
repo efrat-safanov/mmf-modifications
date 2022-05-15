@@ -17,7 +17,7 @@ dataset_config:
     features:
       train:
         - memotion/annotations/train/features/resnet.lmdb
-         test:
+      test:
         - memotion/annotations/test/features/resnet.lmdb
     annotations:
       train:

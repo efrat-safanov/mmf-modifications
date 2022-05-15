@@ -121,7 +121,7 @@ class Metrics:
             metric_cls = registry.get_metric_class(metric_type)
             if metric_cls is None:
                 raise ValueError(
-                    f"No metric named {metric_type} registered to registry"
+                    f"No metric named '{metric_type}' registered to registry"
                 )
 
             metric_instance = metric_cls(**params)

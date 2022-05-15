@@ -219,7 +219,6 @@ class LMDBFeatureReader(PaddedFasterRCNNFeatureReader):
             self.image_id_indices = {
                 self.image_ids[i]: i for i in range(0, len(self.image_ids))
             }
-
     def _load(self, image_file_path):
         if self.env is None:
             self._init_db()
