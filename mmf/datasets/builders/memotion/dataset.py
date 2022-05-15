@@ -15,7 +15,7 @@ from torchvision import transforms
 
 
 class OffensiveImageDataset(MMFDataset):
-    offensive_map: Dict[str, int] = {"not_offensive": 0, "slight": 1, "offensive": 1, "very_offensive": 1, "hateful_offensive" : 1}
+    offensive_map: Dict[str, int] = {"not_offensive": 0, "slight": 1, "offensive": 1, "very_offensive": 1, "hateful_offensive" : 1, "0" : 0, "1" : 1}
 
     def __init__(self, config, *args, dataset_name="offensive", **kwargs):
         super().__init__(dataset_name, config, *args, **kwargs)

@@ -73,11 +73,15 @@ def extract_dataset_pool5(image_dir, save_dir, total_group, group_id, ext_filter
     image_list = {f: 1 for f in image_list}
     exclude = {}
     name_to_id_map = {}
+    use_feat_name_as_id = False
     with open(name_to_id_map_file) as f:
         lines = f.readlines()
         for line in lines:
             line_arr = line.strip("\n").split(",")
             name_to_id_map[line_arr[1]] = line_arr[0].strip("\s")
+            if line_arr[1] == "original_image_name":
+                use_feat_name_as_id = True 
+                print("using feat name as id")
     output_files = glob(os.path.join(save_dir, "*.npy"))
     output_dict = {}
     for f in output_files:
@@ -104,8 +108,10 @@ def extract_dataset_pool5(image_dir, save_dir, total_group, group_id, ext_filter
             continue
         #if image_id % total_group != group_id:
         #    continue
-
+       
         feat_name = image_name.replace(ext_filter, "npy")
+        if use_feat_name_as_id:
+            feat_name = "image_"+image_id+".npy"
         save_path = os.path.join(save_dir, feat_name)
         tmp_lock = save_path + ".lock"
 
