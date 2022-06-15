@@ -6,13 +6,14 @@ includes:
 model_config:
   visual_bert:
     training_head_type: classification
-    num_labels: 2
+    num_labels: 3
     losses:
     - cross_entropy
 
 dataset_config:
   memotion:
     return_features_info: true
+    dataset_task: overall_sentiment
     processors:
       text_processor:
         type: bert_tokenizer

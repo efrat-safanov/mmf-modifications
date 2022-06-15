@@ -1,5 +1,5 @@
 includes:
-- ./text.yaml
+- ./text_3_classes.yaml
 - configs/datasets/memotion/roberta.yaml
 - configs/models/unimodal/roberta.yaml
 
@@ -10,6 +10,10 @@ model_config:
       params:
         in_dim: 768
         num_layers: 2
+
+dataset_config:
+  memotion:
+    dataset_task: overall_sentiment
 
 training:
   batch_size: 128

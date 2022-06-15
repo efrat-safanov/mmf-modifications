@@ -15,10 +15,16 @@ from torchvision import transforms
 
 
 class OffensiveImageDataset(MMFDataset):
-    offensive_map: Dict[str, int] = {"not_offensive": 0, "slight": 1, "offensive": 1, "very_offensive": 1, "hateful_offensive" : 1, "0" : 0, "1" : 1}
+    offensive_map: Dict[str, int] = {"not_offensive": 0, "slight": 1, "offensive": 1, "very_offensive": 1,
+                                     "hateful_offensive": 1, "0": 0, "1": 1,
+                                     "general": 1, "twisted_meaning": 1, "very_twisted": 1, "not_sarcastic": 0,
+                                     "very_positive": 1, "positive": 1, "neutral": 0, "negative": -1, "very_negative": -1,
+                                     "motivational": 1, "not_motivational": 0, "hilarious": 3, "very_funny": 2, "funny": 1,
+                                     "not_funny": 0}
 
     def __init__(self, config, *args, dataset_name="offensive", **kwargs):
         super().__init__(dataset_name, config, *args, **kwargs)
+        self.dataset_task = self.config.get("dataset_task", "sarcasm")
         assert (
             self._use_images
         ), "config's 'use_images' must be true to use image dataset"
@@ -54,10 +60,6 @@ class OffensiveImageDataset(MMFDataset):
 
         current_sample.id = torch.tensor(int(sample_info["id"]), dtype=torch.int)
 
-        # Get the first image from the set of images returned from the image_db
-        #do we need it??
-        #current_sample.image = self.image_db[idx]["images"][0]
-
         features = self.features_db.get(sample_info)
         if hasattr(self, "transformer_bbox_processor"):
             features["image_info_0"] = self.transformer_bbox_processor(
@@ -65,15 +67,29 @@ class OffensiveImageDataset(MMFDataset):
             )
         current_sample.update(features)
 
-        if "offensive" in sample_info:
-            label = None
-            if type(sample_info["offensive"]) == str:
-                label = OffensiveImageDataset.offensive_map[sample_info["offensive"]]
-            if label != 0 and label != 1:
-                raise RuntimeError("Not a binary label dataset - offensive dataset of memotion")
+        if self.dataset_task == "multi":
+            current_sample.answers = ["humour",	"sarcasm", "offensive", "motivational"]
+            labels = [0, 0, 0, 0]
+            for i, curr_task in enumerate(current_sample.answers):
+                label = None
+                if type(sample_info[curr_task]) == str:
+                    label = OffensiveImageDataset.offensive_map[sample_info[curr_task]]
+                if label != 0 and label != 1 and label != -1:
+                    raise RuntimeError("Not a binary/trinary label dataset - dataset of memotion task A or B")
+                labels[i] = label
             current_sample.targets = torch.tensor(
-                label, dtype=torch.long
+                labels, dtype=torch.long
             )
+        else:
+            if self.dataset_task in sample_info:
+                label = None
+                if type(sample_info[self.dataset_task]) == str:
+                    label = OffensiveImageDataset.offensive_map[sample_info[self.dataset_task]]
+                if label != 0 and label != 1 and label != -1:
+                    raise RuntimeError("Not a binary/trinary label dataset - dataset of memotion task A or B")
+                current_sample.targets = torch.tensor(
+                    label, dtype=torch.long
+                )
 
         return current_sample
 
