@@ -1,4 +1,5 @@
 includes:
+- ./text.yaml
 - configs/models/unimodal/text_3_classes.yaml
 - configs/datasets/memotion/roberta.yaml
 - configs/models/unimodal/roberta.yaml
