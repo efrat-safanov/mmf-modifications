@@ -95,6 +95,9 @@ class AnnotationDatabase(torch.utils.data.Dataset):
 
     def __getitem__(self, idx):
         #print(self.data)
+        
+        if isinstance(idx, str):
+            idx = int(idx)
         if isinstance(idx + self.start_idx, int):
             data = self.data[(idx + self.start_idx)]
         else:
