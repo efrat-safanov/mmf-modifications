@@ -18,8 +18,8 @@ class OffensiveImageDataset(MMFDataset):
     offensive_map: Dict[str, int] = {"not_offensive": 0, "slight": 1, "offensive": 1, "very_offensive": 1,
                                      "hateful_offensive": 1, "0": 0, "1": 1,
                                      "general": 1, "twisted_meaning": 1, "very_twisted": 1, "not_sarcastic": 0,
-                                     "very_positive": 1, "positive": 1, "neutral": 0, "negative": -1, "very_negative": -1,
-                                     "motivational": 1, "not_motivational": 0, "hilarious": 3, "very_funny": 2, "funny": 1,
+                                     "very_positive": 1, "positive": 1, "neutral": 0.5, "negative": 0.25, "very_negative": 0,
+                                     "motivational": 1, "not_motivational": 0, "hilarious": 1, "very_funny": 1, "funny": 1,
                                      "not_funny": 0}
 
     def __init__(self, config, *args, dataset_name="offensive", **kwargs):
