@@ -15,9 +15,19 @@ model_config:
       losses:
         - type: logit_bce
 
+evaluation:
+  metrics:
+  - multilabel_macro_f1
+  - multilabel_micro_f1
+  - multilabel_f1
+
+
 dataset_config:
   memotion:
     dataset_task: multi
 
 training:
   batch_size: 128
+  early_stop:
+    criteria: offensive/multilabel_macro_f1
+    minimize: false

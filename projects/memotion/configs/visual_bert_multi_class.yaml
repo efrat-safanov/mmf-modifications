@@ -38,11 +38,9 @@ scheduler:
 
 evaluation:
   metrics:
-  - accuracy
-  - binary_f1
-  - roc_auc
-  - macro_f1
-  - micro_f1
+  - multilabel_macro_f1
+  - multilabel_micro_f1
+  - multilabel_f1
 
 training:
   batch_size: 64
@@ -50,7 +48,7 @@ training:
   max_updates: 22000
   find_unused_parameters: true
   early_stop:
-    criteria: offensive/macro_f1
+    criteria: offensive/multilabel_macro_f1
     minimize: false
 
 checkpoint:
