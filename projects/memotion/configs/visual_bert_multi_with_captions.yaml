@@ -1,13 +1,19 @@
+includes:
+- configs/datasets/memotion/defaults.yaml
+- configs/datasets/memotion/image_captions.yaml
+- configs/models/visual_bert/defaults.yaml
+
 model_config:
-  mmbt:
+  visual_bert:
     training_head_type: classification
-    num_labels: 24
+    num_labels: 4
     losses:
-    - type: logit_bce
+    - logit_bce
 
 dataset_config:
-  mmimdb:
+  memotion:
     return_features_info: false
+    dataset_task: multi
     processors:
       text_processor:
         type: bert_tokenizer
@@ -17,7 +23,13 @@ dataset_config:
             params:
               do_lower_case: true
           mask_probability: 0
-          max_seq_length: 256
+          max_seq_length: 128
+
+optimizer:
+  type: adam_w
+  params:
+    lr: 5e-5
+    eps: 1e-8
 
 scheduler:
   type: warmup_linear
@@ -25,26 +37,23 @@ scheduler:
     num_warmup_steps: 2000
     num_training_steps: ${training.max_updates}
 
-optimizer:
-  type: adam_w
-  params:
-    lr: 1e-5
-    eps: 1e-8
-
 evaluation:
   metrics:
   - multilabel_macro_f1
   - multilabel_micro_f1
-  - accuracy
+  - multilabel_f1
 
 training:
-  batch_size: 32
+  batch_size: 64
   lr_scheduler: true
   max_updates: 22000
+  find_unused_parameters: true
   early_stop:
-    criteria: mmimdb/multilabel_micro_f1
+    criteria: offensive/multilabel_macro_f1
     minimize: false
 
 checkpoint:
   pretrained_state_mapping:
-    bert: bert
+    model.bert: model.bert
+  resume_pretrained: true
+  resume_zoo: visual_bert.pretrained.coco
