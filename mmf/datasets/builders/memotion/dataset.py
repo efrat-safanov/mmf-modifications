@@ -78,7 +78,7 @@ class OffensiveImageDataset(MMFDataset):
                     raise RuntimeError("Not a binary/trinary label dataset - dataset of memotion task A or B")
                 labels[i] = label
             current_sample.targets = torch.tensor(
-                labels, dtype=torch.long
+                labels, dtype=torch.float
             )
         else:
             if self.dataset_task in sample_info:

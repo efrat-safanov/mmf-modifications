@@ -1,21 +1,23 @@
 includes:
 - ./text.yaml
-#- configs/models/unimodal/text_3_classes.yaml
 - configs/datasets/memotion/roberta.yaml
+- configs/datasets/memotion/image_captions.yaml
 - configs/models/unimodal/roberta.yaml
 
 model_config:
   unimodal_text:
+      num_labels: 4
     classifier:
       type: mlp
       params:
         in_dim: 768
-        out_dim: 2
         num_layers: 2
+      losses:
+        - type: logit_bce
 
 dataset_config:
   memotion:
-    dataset_task: overall_sentiment
+    dataset_task: multi
 
 training:
   batch_size: 128
