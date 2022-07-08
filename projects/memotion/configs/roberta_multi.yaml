@@ -5,7 +5,9 @@ includes:
 
 model_config:
   unimodal_text:
-      num_labels: 4
+    num_labels: 4
+    losses:
+    - logit_bce
     classifier:
       type: mlp
       params:
