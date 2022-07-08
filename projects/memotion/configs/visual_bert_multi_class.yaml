@@ -40,7 +40,10 @@ evaluation:
   metrics:
   - multilabel_macro_f1
   - multilabel_micro_f1
-  - multilabel_f1
+  - sarcasm_macro_f1
+  - sarcasm_micro_f1
+  - offensive_macro_f1
+  - offensive_micro_f1
 
 training:
   batch_size: 64

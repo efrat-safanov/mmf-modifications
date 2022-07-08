@@ -1,6 +1,6 @@
 includes:
 - ./text.yaml
-#- configs/models/unimodal/text_3_classes.yaml
+- configs/models/unimodal/text_3_classes.yaml
 - configs/datasets/memotion/roberta.yaml
 - configs/datasets/memotion/image_captions.yaml
 - configs/models/unimodal/roberta.yaml
@@ -11,7 +11,7 @@ model_config:
       type: mlp
       params:
         in_dim: 768
-        num_layers: 2
+        num_layers: 3
 
 dataset_config:
   memotion:

@@ -709,6 +709,7 @@ class F1(BaseMetric):
     def __init__(self, *args, **kwargs):
         super().__init__("f1")
         self._multilabel = kwargs.pop("multilabel", False)
+        self._label_index = -1
         self._sk_kwargs = kwargs
 
     def calculate(self, sample_list, model_output, *args, **kwargs):
@@ -725,16 +726,22 @@ class F1(BaseMetric):
         scores = model_output["scores"]
         expected = sample_list["targets"]
 
-        if self._multilabel:
+        if self._multilabel and self._label_index == -1:
             output = torch.sigmoid(scores)
             output = torch.round(output)
             expected = _convert_to_one_hot(expected, output)
         else:
             # Multiclass, or binary case
-            output = scores.argmax(dim=-1)
+            if self._label_index > -1:
+                output = scores[self._label_index]
+            else:
+                output = scores.argmax(dim=-1)
             if expected.dim() != 1:
                 # Probably one-hot, convert back to class indices array
-                expected = expected.argmax(dim=-1)
+                if self._label_index > -1:
+                    expected = expected[self._label_index]
+                else:
+                    expected = expected.argmax(dim=-1)
 
         value = f1_score(expected.cpu(), output.cpu(), **self._sk_kwargs)
 
@@ -811,6 +818,58 @@ class MultiLabelMacroF1(MultiLabelF1):
     def __init__(self, *args, **kwargs):
         super().__init__(average="macro", **kwargs)
         self.name = "multilabel_macro_f1"
+
+
+@registry.register_metric("offensive_micro_f1")
+class OffensiveMicroF1(MultiLabelF1):
+    """Metric for calculating Multilabel Micro F1.
+
+    **Key:** ``offensive_micro_f1``
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(average="micro", **kwargs)
+        self.name = "offensive_micro_f1"
+        self._label_index = 2
+
+
+@registry.register_metric("offensive_macro_f1")
+class OffensiveMacroF1(MultiLabelF1):
+    """Metric for calculating Multilabel Macro F1.
+
+    **Key:** ``offensive_macro_f1``
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(average="macro", **kwargs)
+        self.name = "offensive_macro_f1"
+        self._label_index = 2
+
+
+@registry.register_metric("sarcasm_micro_f1")
+class SarcasmMicroF1(MultiLabelF1):
+    """Metric for calculating Multilabel Micro F1.
+
+    **Key:** ``sarcasm_micro_f1``
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(average="micro", **kwargs)
+        self.name = "sarcasm_micro_f1"
+        self._label_index = 1
+
+
+@registry.register_metric("sarcasm_macro_f1")
+class SarcasmMacroF1(MultiLabelF1):
+    """Metric for calculating Multilabel Macro F1.
+
+    **Key:** ``sarcasm_macro_f1``
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(average="macro", **kwargs)
+        self.name = "sarcasm_macro_f1"
+        self._label_index = 1
 
 
 @registry.register_metric("roc_auc")
