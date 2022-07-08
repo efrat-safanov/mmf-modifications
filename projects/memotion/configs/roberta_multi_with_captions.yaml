@@ -6,7 +6,9 @@ includes:
 
 model_config:
   unimodal_text:
-      num_labels: 4
+    num_labels: 4
+    losses:
+    - logit_bce
     classifier:
       type: mlp
       params:
@@ -20,6 +22,10 @@ evaluation:
   - multilabel_macro_f1
   - multilabel_micro_f1
   - multilabel_f1
+  - sarcasm_macro_f1
+  - sarcasm_micro_f1
+  - offensive_macro_f1
+  - offensive_micro_f1
 
 
 dataset_config:
