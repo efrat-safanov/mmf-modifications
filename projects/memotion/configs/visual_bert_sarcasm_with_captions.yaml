@@ -1,0 +1,26 @@
+includes:
+- configs/datasets/memotion/defaults.yaml
+- configs/datasets/memotion/image_captions.yaml
+- ./visual_bert.yaml
+
+model_config:
+  visual_bert:
+    training_head_type: classification
+    num_labels: 2
+    losses:
+    - cross_entropy
+
+dataset_config:
+  memotion:
+    dataset_task: sarcasm
+    return_features_info: true
+    processors:
+      text_processor:
+        type: bert_tokenizer
+        params:
+          tokenizer_config:
+            type: bert-base-uncased
+            params:
+              do_lower_case: true
+          mask_probability: 0
+          max_seq_length: 128
