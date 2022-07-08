@@ -733,13 +733,15 @@ class F1(BaseMetric):
         else:
             # Multiclass, or binary case
             if self._label_index > -1:
-                output = scores[self._label_index]
+                output = torch.sigmoid(scores)
+                output = torch.round(output)
+                output = output[:, self._label_index]
             else:
                 output = scores.argmax(dim=-1)
             if expected.dim() != 1:
                 # Probably one-hot, convert back to class indices array
                 if self._label_index > -1:
-                    expected = expected[self._label_index]
+                    expected = expected[:, self._label_index]
                 else:
                     expected = expected.argmax(dim=-1)
 
