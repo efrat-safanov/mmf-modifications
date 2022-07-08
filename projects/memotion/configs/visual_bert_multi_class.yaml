@@ -44,6 +44,10 @@ evaluation:
   - sarcasm_micro_f1
   - offensive_macro_f1
   - offensive_micro_f1
+  - humour_macro_f1
+  - humour_micro_f1
+  - motivational_macro_f1
+  - motivational_micro_f1
 
 training:
   batch_size: 64

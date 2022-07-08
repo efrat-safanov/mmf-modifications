@@ -874,6 +874,72 @@ class SarcasmMacroF1(MultiLabelF1):
         self._label_index = 1
 
 
+@registry.register_metric("sarcasm_micro_f1")
+class SarcasmMicroF1(MultiLabelF1):
+    """Metric for calculating Multilabel Micro F1.
+
+    **Key:** ``sarcasm_micro_f1``
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(average="micro", **kwargs)
+        self.name = "sarcasm_micro_f1"
+        self._label_index = 1
+
+
+@registry.register_metric("humour_macro_f1")
+class HumourMacroF1(MultiLabelF1):
+    """Metric for calculating Multilabel Macro F1.
+
+    **Key:** ``humour_macro_f1``
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(average="macro", **kwargs)
+        self.name = "humour_macro_f1"
+        self._label_index = 0
+
+
+@registry.register_metric("humour_micro_f1")
+class HumourMicroF1(MultiLabelF1):
+    """Metric for calculating Multilabel Micro F1.
+
+    **Key:** ``humour_micro_f1``
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(average="micro", **kwargs)
+        self.name = "humour_micro_f1"
+        self._label_index = 0
+
+
+@registry.register_metric("motivational_macro_f1")
+class MotivationalMacroF1(MultiLabelF1):
+    """Metric for calculating Multilabel Macro F1.
+
+    **Key:** ``motivational_macro_f1``
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(average="macro", **kwargs)
+        self.name = "motivational_macro_f1"
+        self._label_index = 3
+
+
+@registry.register_metric("motivational_micro_f1")
+class MotivationalMicroF1(MultiLabelF1):
+    """Metric for calculating Multilabel Micro F1.
+
+    **Key:** ``motivational_micro_f1``
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(average="micro", **kwargs)
+        self.name = "motivational_micro_f1"
+        self._label_index = 3
+
+
+
 @registry.register_metric("roc_auc")
 class ROC_AUC(BaseMetric):
     """Metric for calculating ROC_AUC.
