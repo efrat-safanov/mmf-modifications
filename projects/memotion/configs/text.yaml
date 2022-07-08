@@ -32,7 +32,7 @@ training:
   lr_scheduler: true
   max_updates: 22000
   early_stop:
-    criteria: offensive/roc_auc
+    criteria: offensive/macro_f1
     minimize: false
 
 checkpoint:
