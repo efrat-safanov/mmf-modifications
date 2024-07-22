@@ -8,6 +8,6 @@ dataset_config:
       train:
       - memotion/image_captions/image_captioning_train.csv
       val:
-      - memotion/image_captions/image_captioning_train.csv
+      - memotion/image_captions/image_captioning_test.csv
       test:
       - memotion/image_captions/image_captioning_test.csv
