@@ -226,6 +226,7 @@ class Configuration:
         self.upgrade(self.config)
         # Resolve the config here itself after full creation so that spawned workers
         # don't face any issues
+        print(self.config)
         self.config = OmegaConf.create(
             OmegaConf.to_container(self.config, resolve=True)
         )

@@ -6,7 +6,7 @@ import torch
 from mmf.common.registry import registry
 from mmf.models.base_model import BaseModel
 from mmf.modules.encoders import MultiModalEncoderBase
-from mmf.utils.build import build_classifier_layer
+from mmf.utils.build import (build_classifier_layer,build_text_encoder)
 from mmf.utils.modeling import get_bert_configured_parameters
 
 
@@ -17,6 +17,7 @@ class FusionBase(MultiModalEncoderBase):
     def build(self):
         encoders = self._build_encoders(self.config)
         text_encoder, modal_encoder = encoders[0], encoders[1]
+        print(self.config)
 
         self._modal_encoder_config = self.config.modal_encoder
         self._is_direct_features_input = self.config.direct_features_input
@@ -191,4 +192,76 @@ class LateFusion(BaseModel):
         modal = self.modal_classifier(modal_embedding)
         output = {}
         output["scores"] = (text + modal) / 2
+        return output
+
+
+@registry.register_model("concat_bert_with_captions")
+class ConcatBERTWithCaptions(BaseModel):
+    def __init__(self, config, *args, **kwargs):
+        super().__init__(config)
+        self._is_direct_features_input = config.direct_features_input
+
+    @classmethod
+    def config_path(cls):
+        return "configs/models/fusions/concat_bert_with_captions.yaml"
+
+    def build(self):
+        if self.config.get("text_encoder", None):
+            self.text_encoder = build_text_encoder(self.config.text_encoder)
+            # As the in_dim is dynamically calculated we need to copy classifier_config
+        classifier_config = deepcopy(self.config.classifier)
+        self.classifier = build_classifier_layer(classifier_config)
+
+        if self.config.freeze_text or self.config.freeze_complete_base:
+            for p in self.text_encoder.parameters():
+                p.requires_grad = False
+
+
+    def get_optimizer_parameters(self, config):
+        # For finetuning setup, we have classifier
+        lr = config.optimizer.params.lr
+        model_config = getattr(config.model_config, config.model, {})
+        finetune_lr_multiplier = getattr(model_config, "finetune_lr_multiplier", 1)
+        # Finetune the bert pretrained part with finetune_lr_multiplier if it is set
+        parameters = get_bert_configured_parameters(
+            self.text_encoder, lr * finetune_lr_multiplier
+        )
+        parameters += get_bert_configured_parameters(self.classifier, lr)
+        return parameters
+
+    def forward(self, sample_list):
+        text = sample_list.input_ids
+        mask = sample_list.input_mask
+        segment = sample_list.segment_ids
+
+        if self._is_direct_features_input:
+            modal = sample_list.image_feature_0
+        else:
+            modal = sample_list.image
+            
+        image_caption_embedding = self.text_encoder(text, *[], **{})
+
+        # Case of bert encoder, we only need pooled output. For BertModelJIT encoder
+        # pooled output is the 2nd in the tuple(sequence, pooled, encoded_layers)
+        if isinstance(image_caption_embedding, collections.abc.Sequence) and len(image_caption_embedding) >= 2:
+            image_caption_embedding = image_caption_embedding[1]
+        
+        #print(text[0])
+        image_caption_embedding = torch.flatten(image_caption_embedding, start_dim=1)
+        #print(image_caption_embedding[0])
+        
+        text_embedding = self.text_encoder(text, mask, segment)
+
+        # Case of bert encoder, we only need pooled output. For BertModelJIT encoder
+        # pooled output is the 2nd in the tuple(sequence, pooled, encoded_layers)
+        if isinstance(text_embedding, collections.abc.Sequence) and len(text_embedding) >= 2:
+            text_embedding = text_embedding[1]
+        
+        text_embedding = torch.flatten(text_embedding, start_dim=1)
+        #print(text_embedding[0])
+
+        embedding = torch.cat([text_embedding, image_caption_embedding], dim=-1)
+        #print(embedding[0])
+        output = {}
+        output["scores"] = self.classifier(embedding)
         return output
